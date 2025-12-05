@@ -4,8 +4,34 @@ import 'death_row/death_row.dart';
 import 'pages/other_cases.dart';
 import 'pages/instructions.dart';
 
+void main() {
+  runApp(const MyApp());
+}
 
-import 'package:flutter/material.dart';
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+
+      // Intro page is your home screen
+      initialRoute: IntroPage.routeName,
+
+      routes: {
+        IntroPage.routeName: (context) => const IntroPage(),
+        IntroPage.uniqueRoute: (context) => const DeathRowScreen(),
+        IntroPage.commonRoute: (context) => const CommonCasesScreen(),
+        IntroPage.helpRoute: (context) => const InstructionsScreen(),
+      },
+    );
+  }
+}
+
+// -------------------------
+// Your IntroPage widget
+// -------------------------
 
 class IntroPage extends StatelessWidget {
   const IntroPage({super.key});
