@@ -1,13 +1,57 @@
 import 'package:flutter/material.dart';
-import 'pages/intro.dart';
-import 'death_row/death_row.dart';
-import 'pages/other_cases.dart';
-import 'pages/instructions.dart';
+
+// ------------------------------
+// IMPORT YOUR CASE FILES
+// ------------------------------
+import 'death_row/scene.dart';
+import 'death_row/evidence.dart';
+import 'death_row/suspects.dart';
+
+// ------------------------------
+// OTHER CASE PAGE (placeholder)
+// ------------------------------
+class TheRestPage extends StatelessWidget {
+  const TheRestPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(
+        child: Text(
+          "Other Case Page",
+          style: TextStyle(fontSize: 22),
+        ),
+      ),
+    );
+  }
+}
+
+// ------------------------------
+// INSTRUCTIONS PAGE (placeholder)
+// ------------------------------
+class InstructionsPage extends StatelessWidget {
+  const InstructionsPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(
+        child: Text(
+          "Instructions Page",
+          style: TextStyle(fontSize: 22),
+        ),
+      ),
+    );
+  }
+}
 
 void main() {
   runApp(const MyApp());
 }
 
+// ------------------------------
+// ROOT OF THE APP
+// ------------------------------
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -15,30 +59,39 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      title: "Case Closed",
+      theme: ThemeData.dark(),
 
-      // Intro page is your home screen
-      initialRoute: IntroPage.routeName,
+      // Intro page first
+      initialRoute: '/intro',
 
       routes: {
-        IntroPage.routeName: (context) => const IntroPage(),
-        IntroPage.uniqueRoute: (context) => const DeathRowScreen(),
-        IntroPage.commonRoute: (context) => const CommonCasesScreen(),
-        IntroPage.helpRoute: (context) => const InstructionsScreen(),
+        // Intro
+        '/intro': (context) => const IntroPage(),
+
+        // Death Row case pages
+        '/DeathRow': (context) => ScenePage(),
+        '/DeathRowEvidence': (context) => EvidencePage(),
+        '/DeathRowSuspects': (context) => SuspectsPage(),
+
+        // Other cases
+        '/TheRest': (context) => const TheRestPage(),
+
+        // Help
+        '/instructions': (context) => const InstructionsPage(),
       },
     );
   }
 }
 
-// -------------------------
-// Your IntroPage widget
-// -------------------------
-
+// ------------------------------
+// INTRO PAGE — YOUR ORIGINAL CODE
+// ------------------------------
 class IntroPage extends StatelessWidget {
   const IntroPage({super.key});
 
   static const routeName = '/intro';
 
-  // Routes for navigation
   static const String uniqueRoute = '/DeathRow';
   static const String commonRoute = '/TheRest';
   static const String helpRoute = '/instructions';
@@ -48,7 +101,7 @@ class IntroPage extends StatelessWidget {
     final theme = Theme.of(context);
 
     final buttons = <String>[
-      'Death on the Row',  // unique route
+      'Death on the Row',  
       'The Final Guest List',
       'Cipher Killer',
       'A Killer Among the Guest',
@@ -70,13 +123,9 @@ class IntroPage extends StatelessWidget {
           child: Column(
             children: [
               const SizedBox(height: 48),
-
-              // Logo
               const FlutterLogo(size: 96),
-
               const SizedBox(height: 32),
 
-              // Title
               Text(
                 'Case Closed',
                 style: theme.textTheme.headlineMedium?.copyWith(
@@ -85,7 +134,6 @@ class IntroPage extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-
               const SizedBox(height: 12),
 
               Text(
@@ -98,7 +146,6 @@ class IntroPage extends StatelessWidget {
 
               const Spacer(),
 
-              // Case Buttons
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: List.generate(buttons.length, (index) {
@@ -119,10 +166,7 @@ class IntroPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      child: Text(
-                        label,
-                        style: const TextStyle(fontSize: 16),
-                      ),
+                      child: Text(label, style: const TextStyle(fontSize: 16)),
                     ),
                   );
                 }),
@@ -130,11 +174,9 @@ class IntroPage extends StatelessWidget {
 
               const SizedBox(height: 8),
 
-              // Skip button
               TextButton(
                 onPressed: () {
-                  Navigator.of(context)
-                      .pushReplacementNamed(commonRoute);
+                  Navigator.of(context).pushReplacementNamed(commonRoute);
                 },
                 child: const Text(
                   'Skip',
@@ -144,7 +186,6 @@ class IntroPage extends StatelessWidget {
 
               const SizedBox(height: 24),
 
-              // Help button
               Align(
                 alignment: Alignment.centerRight,
                 child: Padding(
