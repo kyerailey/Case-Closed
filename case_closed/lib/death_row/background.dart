@@ -10,7 +10,7 @@ class DeathRowBackground extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('CASE FILE: #001')),
+      appBar: AppBar(title: const Text('CASE FILE: #001: DEATH ON THE ROW')),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -63,7 +63,7 @@ class DeathRowBackground extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(color: AppColors.surface.withOpacity(0.5), borderRadius: BorderRadius.circular(8)),
                 child: const Text(
-                  "• Tyler Bishop (Big Brother)\n• Mason Duquette (President)\n• Jenna Ward (Ex-Girlfriend)\n• Prof. Adrian Kline",
+                  "• Jenna Ward (Ex-Girlfriend)\n• Tyler Bishop (Big Brother)\n• Prof. Adrian Kline• Mason Duquette (President)\n",
                   style: TextStyle(fontSize: 15, height: 1.8, color: Colors.white, fontFamily: 'Monospace'),
                 ),
               ),

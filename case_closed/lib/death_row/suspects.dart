@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart'; 
+import '../models/evidence_model.dart';
 import '../main.dart'; 
 
 class SuspectsTab extends StatefulWidget {
@@ -8,34 +10,45 @@ class SuspectsTab extends StatefulWidget {
 }
 
 class _SuspectsTabState extends State<SuspectsTab> {
+  // ---------------------------------------------------
+  // NEW ORDER: Jenna, Tyler, Kline, Mason (Last)
+  // ---------------------------------------------------
   final List<Map<String, String>> suspects = [
+    // 1. JENNA
     {
-      "name": "Tyler Bishop", "role": "The 'Big Brother'",
-      "alibi": "Claims he was in the kitchen cutting limes.",
-      "motive": "Ethan threatened to report hazing violations.",
-      "notes": "Personal Effects: Wallet contains Visa ending in #8842. Right arm has fresh linear abrasions.",
-      "image": "assets/images/suspect_tyler.png", 
-    },
-    {
-      "name": "Mason Duquette", "role": "Frat President",
-      "alibi": "Seen on CCTV in backyard (11:55 PM - 12:20 AM).",
-      "motive": "Protecting fraternity reputation.",
-      "notes": "Room Search: Door found open. 'Benzodiazepine' vials found in desk, but no fingerprints on them.",
-      "image": "assets/images/suspect_mason.png",
-    },
-    {
-      "name": "Jenna Ward", "role": "Ex-Girlfriend",
+      "name": "Jenna Ward", 
+      "role": "Ex-Girlfriend",
       "alibi": "Traffic cam shows her car leaving campus at 11:59 PM.",
       "motive": "Anger over breakup.",
       "notes": "Forensics: Fingerprints on balcony railing match hers, but dust analysis suggests they are 4+ hours old.",
       "image": "assets/images/suspect_jenna.png",
     },
+    // 2. TYLER
     {
-      "name": "Prof. Adrian Kline", "role": "Faculty Advisor",
+      "name": "Tyler Bishop", 
+      "role": "The 'Big Brother'",
+      "alibi": "Claims he was in the kitchen cutting limes.",
+      "motive": "Ethan threatened to report hazing violations.",
+      "notes": "Personal Effects: Wallet contains Visa ending in #8842.",
+      "image": "assets/images/suspect_tyler.png", 
+    },
+    // 3. PROF KLINE
+    {
+      "name": "Prof. Adrian Kline", 
+      "role": "Faculty Advisor",
       "alibi": "Faculty Dinner downtown.",
       "motive": "Ethan discovered academic fraud.",
       "notes": "Personal Effects: Receipt from 'The Golden Steakhouse' timestamped 12:05 AM. Distance: 15 miles.",
       "image": "assets/images/suspect_kline.png",
+    },
+    // 4. MASON (Last)
+    {
+      "name": "Mason Duquette", 
+      "role": "Frat President",
+      "alibi": "Seen on CCTV in backyard (11:55 PM - 12:20 AM).",
+      "motive": "Protecting fraternity reputation.",
+      "notes": "Room Search: Door found open. Desk messy.",
+      "image": "assets/images/suspect_mason.png",
     },
   ];
 
@@ -94,6 +107,8 @@ class _SuspectCarouselDialogState extends State<SuspectCarouselDialog> {
   @override
   Widget build(BuildContext context) {
     final suspect = widget.suspects[currentIndex];
+    final evidenceModel = Provider.of<EvidenceModel>(context, listen: false);
+
     return Dialog(
       backgroundColor: Colors.transparent, insetPadding: const EdgeInsets.all(16),
       child: Container(
@@ -117,16 +132,35 @@ class _SuspectCarouselDialogState extends State<SuspectCarouselDialog> {
             ]),
             const SizedBox(height: 12),
             Container(padding: const EdgeInsets.all(10), width: double.infinity, decoration: BoxDecoration(color: Colors.grey.shade200, borderRadius: BorderRadius.circular(8)), child: Text("NOTES:\n${suspect['notes']}", style: TextStyle(fontSize: 13, color: Colors.grey.shade800))),
+            
             const SizedBox(height: 20),
+            
+            // INSPECT BUTTON
             SizedBox(
-              width: double.infinity, height: 50,
+              width: double.infinity, height: 45,
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(backgroundColor: AppColors.buttonColor, foregroundColor: Colors.white),
+                icon: const Icon(Icons.search),
+                label: const Text("SEARCH SUSPECT / ROOM"),
+                onPressed: () {
+                  _performSearch(context, suspect["name"]!, evidenceModel);
+                },
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
+            // WARRANT BUTTON
+            SizedBox(
+              width: double.infinity, height: 45,
               child: ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF2C3E50), foregroundColor: Colors.white),
                 icon: const Icon(Icons.assignment_turned_in),
-                label: const Text("BUILD CASE (FILE WARRANT)"),
+                label: const Text("FILE WARRANT"),
                 onPressed: () { Navigator.pop(context); Navigator.pushNamed(context, '/Warrant'); },
               ),
             ),
+
             const SizedBox(height: 15),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               currentIndex > 0 ? IconButton(icon: const Icon(Icons.arrow_back, color: Colors.black), onPressed: () => setState(() => currentIndex--)) : const SizedBox(width: 48),
@@ -137,5 +171,67 @@ class _SuspectCarouselDialogState extends State<SuspectCarouselDialog> {
       ),
     );
   }
+
+  // ******************************************************
+  // UPDATED SEARCH LOGIC
+  // ******************************************************
+  void _performSearch(BuildContext context, String name, EvidenceModel model) {
+    if (name.contains("Tyler")) {
+      // TYLER (Has Evidence)
+      _showResultDialog(
+        context: context, 
+        title: "Search Result", 
+        body: "You inspect Tyler's arms...\n\nHe pulls away, but not before you see fresh scratches.", 
+        hasEvidence: true,
+        onCollect: () {
+          model.addEvidence(Evidence(id: 'forensics', title: 'Forensic Report', description: 'Tyler\'s arm has fresh scratches containing the victim\'s DNA.'));
+        }
+      );
+    } else if (name.contains("Mason")) {
+      // MASON (Has Evidence)
+      _showResultDialog(
+        context: context,
+        title: "Search Result", 
+        body: "You search Mason's desk...\n\nHidden under a textbook, you find empty glass vials.", 
+        hasEvidence: true,
+        onCollect: () {
+          model.addEvidence(Evidence(id: 'vials', title: 'Empty Vials', description: 'Found in Mason\'s desk. Label torn off, but traces of sedative remain.'));
+        }
+      );
+    } else {
+      // OTHERS (Clean Search)
+      _showResultDialog(
+        context: context,
+        title: "Search Clean",
+        body: "You performed a thorough search of the suspect and their belongings.\n\nNothing suspicious was found.",
+        hasEvidence: false,
+        onCollect: () {} // Do nothing
+      );
+    }
+  }
+
+  // ONE DIALOG TO RULE THEM ALL
+  void _showResultDialog({required BuildContext context, required String title, required String body, required bool hasEvidence, required VoidCallback onCollect}) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text(title),
+        content: Text(body),
+        actions: [
+          TextButton(
+            child: Text(hasEvidence ? "Collect Evidence" : "Okay"),
+            onPressed: () {
+              if (hasEvidence) {
+                onCollect();
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Evidence Added!"), backgroundColor: Colors.green));
+              }
+              Navigator.pop(context); // Close dialog
+            },
+          )
+        ],
+      ),
+    );
+  }
+
   Widget _row(String l, String v) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(l, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black87)), Text(v, style: const TextStyle(fontSize: 14, color: Colors.black54))]);
 }
