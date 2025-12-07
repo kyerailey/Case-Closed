@@ -1,57 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-// ------------------------------
-// IMPORT YOUR CASE FILES
-// ------------------------------
+// MODELS
+import 'models/evidence_model.dart'; 
+
+// PAGES
+import 'death_row/background.dart'; 
 import 'death_row/scene.dart';
-import 'death_row/evidence.dart';
-import 'death_row/suspects.dart';
+import 'death_row/warrant.dart';
 
 // ------------------------------
-// OTHER CASE PAGE (placeholder)
+// COLOR PALETTE (Figma)
 // ------------------------------
-class TheRestPage extends StatelessWidget {
-  const TheRestPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text(
-          "Other Case Page",
-          style: TextStyle(fontSize: 22),
-        ),
-      ),
-    );
-  }
-}
-
-// ------------------------------
-// INSTRUCTIONS PAGE (placeholder)
-// ------------------------------
-class InstructionsPage extends StatelessWidget {
-  const InstructionsPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text(
-          "Instructions Page",
-          style: TextStyle(fontSize: 22),
-        ),
-      ),
-    );
-  }
+class AppColors {
+  static const Color background = Color(0xFF0F202E); // Deep Navy
+  static const Color surface = Color(0xFF243B53);    // Lighter Navy
+  static const Color accent = Color(0xFFFF6B6B);     // Salmon Red
+  static const Color textMain = Color(0xFFF5F7FA);   // Off-white
+  static const Color buttonColor = Color(0xFF597D9D);// Steel Blue
 }
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => EvidenceModel(),
+      child: const MyApp(),
+    ),
+  );
 }
 
-// ------------------------------
-// ROOT OF THE APP
-// ------------------------------
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -60,149 +37,96 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Case Closed",
-      theme: ThemeData.dark(),
-
-      // Intro page first
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: AppColors.background,
+        primaryColor: AppColors.surface,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: AppColors.background,
+          elevation: 0,
+          titleTextStyle: TextStyle(color: AppColors.accent, fontSize: 20, fontWeight: FontWeight.bold),
+          iconTheme: IconThemeData(color: AppColors.textMain),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.buttonColor,
+            foregroundColor: AppColors.textMain,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+          ),
+        ),
+      ),
       initialRoute: '/intro',
-
       routes: {
-        // Intro
         '/intro': (context) => const IntroPage(),
-
-        // Death Row case pages
-        '/DeathRow': (context) => ScenePage(),
-        '/DeathRowEvidence': (context) => EvidencePage(),
-        '/DeathRowSuspects': (context) => SuspectsPage(),
-
-        // Other cases
-        '/TheRest': (context) => const TheRestPage(),
-
-        // Help
-        '/instructions': (context) => const InstructionsPage(),
+        '/DeathRow': (context) => const DeathRowBackground(), 
+        '/DeathRowScene': (context) => const DeathRowScene(),
+        '/Warrant': (context) => const WarrantPage(),
+        // Placeholders
+        '/TheRest': (context) => const Scaffold(body: Center(child: Text("Coming Soon"))),
+        '/instructions': (context) => const Scaffold(body: Center(child: Text("Instructions..."))),
       },
     );
   }
 }
 
-// ------------------------------
-// INTRO PAGE — YOUR ORIGINAL CODE
-// ------------------------------
 class IntroPage extends StatelessWidget {
   const IntroPage({super.key});
 
-  static const routeName = '/intro';
-
-  static const String uniqueRoute = '/DeathRow';
-  static const String commonRoute = '/TheRest';
-  static const String helpRoute = '/instructions';
-
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    final buttons = <String>[
-      'Death on the Row',  
-      'The Final Guest List',
-      'Cipher Killer',
-      'A Killer Among the Guest',
-      'Secrets on Silverlake',
-    ];
+    final buttons = ['Death on the Row', 'The Final Guest List', 'Cipher Killer', 'A Killer Among Guests'];
 
     return Scaffold(
       body: SafeArea(
-        child: Container(
-          width: double.infinity,
+        child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFF0F172A), Color(0xFF0B2447)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
           child: Column(
             children: [
-              const SizedBox(height: 48),
-              const FlutterLogo(size: 96),
-              const SizedBox(height: 32),
-
-              Text(
-                'Case Closed',
-                style: theme.textTheme.headlineMedium?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                ),
-                textAlign: TextAlign.center,
+              const SizedBox(height: 60),
+              // LOGO
+              Center(
+                child: Image.asset('assets/images/icon.png', height: 150, fit: BoxFit.contain,
+                errorBuilder: (c,e,s) => const Icon(Icons.search, size: 100, color: AppColors.accent)),
               ),
-              const SizedBox(height: 12),
-
-              Text(
-                'Organize cases, track progress, and close them faster.',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: Colors.white70,
-                ),
-                textAlign: TextAlign.center,
-              ),
-
+              const SizedBox(height: 20),
+              const Text('Solve the unsolvable.', style: TextStyle(color: Colors.white54, fontSize: 16, fontStyle: FontStyle.italic)),
               const Spacer(),
 
+              // BUTTONS
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: List.generate(buttons.length, (index) {
-                  final label = buttons[index];
-                  final destination =
-                      index == 0 ? uniqueRoute : commonRoute;
-
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 12),
                     child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context)
-                            .pushReplacementNamed(destination);
+                      onPressed: () async {
+                        if (index == 0) {
+                          // CHECK SAVE FILE LOGIC
+                          final evidenceModel = Provider.of<EvidenceModel>(context, listen: false);
+                          await evidenceModel.loadProgress(); // Load from disk
+
+                          if (evidenceModel.hasSaveFile) {
+                            Navigator.of(context).pushNamed('/DeathRowScene'); // Resume
+                          } else {
+                            Navigator.of(context).pushNamed('/DeathRow'); // Start New
+                          }
+                        } else {
+                          Navigator.of(context).pushNamed('/TheRest');
+                        }
                       },
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: Text(label, style: const TextStyle(fontSize: 16)),
+                      style: ElevatedButton.styleFrom(backgroundColor: AppColors.surface),
+                      child: Text(buttons[index], style: const TextStyle(fontSize: 16)),
                     ),
                   );
                 }),
               ),
-
-              const SizedBox(height: 8),
-
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pushReplacementNamed(commonRoute);
-                },
-                child: const Text(
-                  'Skip',
-                  style: TextStyle(color: Colors.white70),
-                ),
-              ),
-
               const SizedBox(height: 24),
-
               Align(
                 alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: Ink(
-                    decoration: const ShapeDecoration(
-                      color: Color(0x33FFFFFF),
-                      shape: CircleBorder(),
-                    ),
-                    child: IconButton(
-                      icon: const Icon(Icons.help_outline, color: Colors.white),
-                      tooltip: 'Instructions',
-                      onPressed: () {
-                        Navigator.of(context).pushNamed(helpRoute);
-                      },
-                    ),
-                  ),
+                child: IconButton(
+                  icon: const Icon(Icons.help_outline, color: AppColors.accent),
+                  onPressed: () => Navigator.of(context).pushNamed('/instructions'),
                 ),
               ),
             ],
