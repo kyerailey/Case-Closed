@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-// ------------------------------
-// IMPORT YOUR MODELS & PAGES
-// ------------------------------
+// MODELS
 import 'models/evidence_model.dart'; 
-import 'pages/instructions.dart'; 
+
+// PAGES
 import 'death_row/background.dart'; 
 import 'death_row/scene.dart';
 import 'death_row/warrant.dart';
 
 // ------------------------------
-// COLOR PALETTE
+// COLOR PALETTE (Figma)
 // ------------------------------
 class AppColors {
   static const Color background = Color(0xFF0F202E); // Deep Navy
@@ -63,26 +62,20 @@ class MyApp extends StatelessWidget {
         '/DeathRow': (context) => const DeathRowBackground(), 
         '/DeathRowScene': (context) => const DeathRowScene(),
         '/Warrant': (context) => const WarrantPage(),
-        '/instructions': (context) => const InstructionsPage(),
+        // Placeholders
+        '/TheRest': (context) => const Scaffold(body: Center(child: Text("Coming Soon"))),
+        '/instructions': (context) => const Scaffold(body: Center(child: Text("Instructions..."))),
       },
     );
   }
 }
 
-// ------------------------------
-// INTRO PAGE (MAIN MENU)
-// ------------------------------
 class IntroPage extends StatelessWidget {
   const IntroPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final buttons = [
-      'Death on the Row',  
-      'The Final Guest List',
-      'Cipher Killer',
-      'A Killer Among Guests'
-    ];
+    final buttons = ['Death on the Row', 'The Final Guest List', 'Cipher Killer', 'A Killer Among Guests'];
 
     return Scaffold(
       body: SafeArea(
@@ -90,131 +83,56 @@ class IntroPage extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
             children: [
-              // 1. DYNAMIC TOP SPACE
-              // "flex: 2" means this space tries to be twice as big as the other spacers
-              // It pushes the logo down, but shrinks if the screen is small.
-              const Spacer(flex: 2),
-
-              // 2. BIGGER LOGO
-              // Wrapped in Flexible so it doesn't crash on small screens
-              Flexible(
-                flex: 6,
-                child: Center(
-                  child: Image.asset(
-                    'assets/images/icon.png',
-                    height: 280, 
-                    fit: BoxFit.contain,
-                    errorBuilder: (c,e,s) => const Icon(Icons.search, size: 150, color: AppColors.accent),
-                  ),
-                ),
+              const SizedBox(height: 60),
+              // LOGO
+              Center(
+                child: Image.asset('assets/images/icon.png', height: 150, fit: BoxFit.contain,
+                errorBuilder: (c,e,s) => const Icon(Icons.search, size: 100, color: AppColors.accent)),
               ),
-
               const SizedBox(height: 20),
+              const Text('Solve the unsolvable.', style: TextStyle(color: Colors.white54, fontSize: 16, fontStyle: FontStyle.italic)),
+              const Spacer(),
 
-              const Text(
-                'Solve the unsolvable.',
-                style: TextStyle(
-                  color: Colors.white54,
-                  fontSize: 18,
-                  fontStyle: FontStyle.italic,
-                ),
-                textAlign: TextAlign.center,
-              ),
-
-              // 3. MIDDLE SPACE
-              // Separates the logo area from the buttons
-              const Spacer(flex: 1),
-
-              // CASE BUTTONS
+              // BUTTONS
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: List.generate(buttons.length, (index) {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 12),
                     child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.surface,
-                        elevation: 0,
-                      ),
                       onPressed: () async {
-                        if (index == 0) { 
-                          // CASE 1: DEATH ON THE ROW
+                        if (index == 0) {
+                          // CHECK SAVE FILE LOGIC
                           final evidenceModel = Provider.of<EvidenceModel>(context, listen: false);
-                          await evidenceModel.loadProgress();
+                          await evidenceModel.loadProgress(); // Load from disk
 
                           if (evidenceModel.hasSaveFile) {
-                            Navigator.of(context).pushNamed('/DeathRowScene');
+                            Navigator.of(context).pushNamed('/DeathRowScene'); // Resume
                           } else {
-                            Navigator.of(context).pushNamed('/DeathRow');
+                            Navigator.of(context).pushNamed('/DeathRow'); // Start New
                           }
                         } else {
-                          // LOCKED CASES
-                          _showLockedCaseDialog(context);
+                          Navigator.of(context).pushNamed('/TheRest');
                         }
                       },
-                      child: Text(
-                        buttons[index], 
-                        style: const TextStyle(fontSize: 16, letterSpacing: 0.5),
-                      ),
+                      style: ElevatedButton.styleFrom(backgroundColor: AppColors.surface),
+                      child: Text(buttons[index], style: const TextStyle(fontSize: 16)),
                     ),
                   );
                 }),
               ),
-
-              const SizedBox(height: 10),
-
-              // HELP BUTTON
+              const SizedBox(height: 24),
               Align(
                 alignment: Alignment.centerRight,
                 child: IconButton(
-                  icon: const Icon(Icons.help_outline, color: AppColors.accent, size: 30),
+                  icon: const Icon(Icons.help_outline, color: AppColors.accent),
                   onPressed: () => Navigator.of(context).pushNamed('/instructions'),
                 ),
               ),
-              const SizedBox(height: 10),
             ],
           ),
         ),
       ),
-    );
-  }
-
-  // THE POPUP DIALOG
-  void _showLockedCaseDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Dialog(
-          backgroundColor: Colors.transparent, 
-          child: Stack(
-            clipBehavior: Clip.none,
-            alignment: Alignment.center,
-            children: [
-              Container(
-                padding: const EdgeInsets.fromLTRB(24, 40, 24, 24),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF1A2634), 
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.black, width: 5),
-                  boxShadow: const [BoxShadow(color: Colors.black54, blurRadius: 10, offset: Offset(0, 5))],
-                ),
-                child: const Text(
-                  "The truth hides in the shadows, but not for long.\n\nReturn once the evidence is ready to be revealed.",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: AppColors.accent, fontSize: 18, fontWeight: FontWeight.bold, height: 1.5),
-                ),
-              ),
-              Positioned(
-                right: 10, top: 10,
-                child: GestureDetector(
-                  onTap: () => Navigator.pop(context),
-                  child: const Icon(Icons.close, color: Colors.white, size: 30),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 }
