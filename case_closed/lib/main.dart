@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-// MODELS
+// ------------------------------
+// IMPORT YOUR MODELS
+// ------------------------------
 import 'models/evidence_model.dart'; 
 
-// PAGES
+// ------------------------------
+// IMPORT YOUR PAGES
+// ------------------------------
+import 'pages/instructions.dart'; 
 import 'death_row/background.dart'; 
 import 'death_row/scene.dart';
 import 'death_row/warrant.dart';
 
 // ------------------------------
-// COLOR PALETTE (Figma)
+// COLOR PALETTE
 // ------------------------------
 class AppColors {
   static const Color background = Color(0xFF0F202E); // Deep Navy
@@ -29,6 +34,9 @@ void main() {
   );
 }
 
+// ------------------------------
+// APP CONFIGURATION & ROUTES
+// ------------------------------
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -37,6 +45,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Case Closed",
+      
+      // THEME SETUP
       theme: ThemeData(
         brightness: Brightness.dark,
         scaffoldBackgroundColor: AppColors.background,
@@ -44,7 +54,11 @@ class MyApp extends StatelessWidget {
         appBarTheme: const AppBarTheme(
           backgroundColor: AppColors.background,
           elevation: 0,
-          titleTextStyle: TextStyle(color: AppColors.accent, fontSize: 20, fontWeight: FontWeight.bold),
+          titleTextStyle: TextStyle(
+            color: AppColors.accent, 
+            fontSize: 20, 
+            fontWeight: FontWeight.bold,
+          ),
           iconTheme: IconThemeData(color: AppColors.textMain),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
@@ -56,26 +70,38 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
+
+      // ROUTES
       initialRoute: '/intro',
       routes: {
         '/intro': (context) => const IntroPage(),
+        
+        // CASE 1: DEATH ON THE ROW
         '/DeathRow': (context) => const DeathRowBackground(), 
         '/DeathRowScene': (context) => const DeathRowScene(),
         '/Warrant': (context) => const WarrantPage(),
-        // Placeholders
-        '/TheRest': (context) => const Scaffold(body: Center(child: Text("Coming Soon"))),
-        '/instructions': (context) => const Scaffold(body: Center(child: Text("Instructions..."))),
+
+        // INSTRUCTIONS
+        '/instructions': (context) => const InstructionsPage(), 
       },
     );
   }
 }
 
+// ------------------------------
+// INTRO PAGE (MAIN MENU)
+// ------------------------------
 class IntroPage extends StatelessWidget {
   const IntroPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final buttons = ['Death on the Row', 'The Final Guest List', 'Cipher Killer', 'A Killer Among Guests'];
+    final buttons = [
+      'Death on the Row',  
+      'The Final Guest List',
+      'Cipher Killer',
+      'A Killer Among Guests'
+    ];
 
     return Scaffold(
       body: SafeArea(
@@ -83,56 +109,128 @@ class IntroPage extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
             children: [
-              const SizedBox(height: 60),
-              // LOGO
-              Center(
-                child: Image.asset('assets/images/icon.png', height: 150, fit: BoxFit.contain,
-                errorBuilder: (c,e,s) => const Icon(Icons.search, size: 100, color: AppColors.accent)),
-              ),
-              const SizedBox(height: 20),
-              const Text('Solve the unsolvable.', style: TextStyle(color: Colors.white54, fontSize: 16, fontStyle: FontStyle.italic)),
-              const Spacer(),
+              // 1. DYNAMIC SPACER (Pushes content down, prevents overflow)
+              const Spacer(flex: 2),
 
-              // BUTTONS
+              // 2. LOGO (Flexible wrapper prevents crash on small screens)
+              Flexible(
+                flex: 6,
+                child: Center(
+                  child: Image.asset(
+                    'assets/images/icon.png',
+                    height: 280, 
+                    fit: BoxFit.contain,
+                    errorBuilder: (c,e,s) => const Icon(Icons.search, size: 150, color: AppColors.accent),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              const Text(
+                'Solve the unsolvable.',
+                style: TextStyle(
+                  color: Colors.white54,
+                  fontSize: 18,
+                  fontStyle: FontStyle.italic,
+                ),
+                textAlign: TextAlign.center,
+              ),
+
+              // 3. MIDDLE SPACER
+              const Spacer(flex: 1),
+
+              // 4. CASE BUTTONS
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: List.generate(buttons.length, (index) {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 12),
                     child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.surface,
+                        elevation: 0,
+                      ),
                       onPressed: () async {
-                        if (index == 0) {
-                          // CHECK SAVE FILE LOGIC
+                        if (index == 0) { 
+                          // CASE 1: DEATH ON THE ROW (Real Logic)
                           final evidenceModel = Provider.of<EvidenceModel>(context, listen: false);
-                          await evidenceModel.loadProgress(); // Load from disk
+                          await evidenceModel.loadProgress();
 
                           if (evidenceModel.hasSaveFile) {
-                            Navigator.of(context).pushNamed('/DeathRowScene'); // Resume
+                            Navigator.of(context).pushNamed('/DeathRowScene');
                           } else {
-                            Navigator.of(context).pushNamed('/DeathRow'); // Start New
+                            Navigator.of(context).pushNamed('/DeathRow');
                           }
                         } else {
-                          Navigator.of(context).pushNamed('/TheRest');
+                          // LOCKED CASES
+                          _showLockedCaseDialog(context);
                         }
                       },
-                      style: ElevatedButton.styleFrom(backgroundColor: AppColors.surface),
-                      child: Text(buttons[index], style: const TextStyle(fontSize: 16)),
+                      child: Text(
+                        buttons[index], 
+                        style: const TextStyle(fontSize: 16, letterSpacing: 0.5),
+                      ),
                     ),
                   );
                 }),
               ),
-              const SizedBox(height: 24),
+
+              const SizedBox(height: 10),
+
+              // 5. HELP BUTTON
               Align(
                 alignment: Alignment.centerRight,
                 child: IconButton(
-                  icon: const Icon(Icons.help_outline, color: AppColors.accent),
+                  icon: const Icon(Icons.help_outline, color: AppColors.accent, size: 30),
+                  tooltip: "Instructions",
                   onPressed: () => Navigator.of(context).pushNamed('/instructions'),
                 ),
               ),
+              const SizedBox(height: 10),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  // LOCKED CASE POPUP
+  void _showLockedCaseDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.transparent, 
+          child: Stack(
+            clipBehavior: Clip.none,
+            alignment: Alignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.fromLTRB(24, 40, 24, 24),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1A2634), 
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.black, width: 5),
+                  boxShadow: const [BoxShadow(color: Colors.black54, blurRadius: 10, offset: Offset(0, 5))],
+                ),
+                child: const Text(
+                  "The truth hides in the shadows, but not for long.\n\nReturn once the evidence is ready to be revealed.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: AppColors.accent, fontSize: 18, fontWeight: FontWeight.bold, height: 1.5),
+                ),
+              ),
+              Positioned(
+                right: 10, top: 10,
+                child: GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: const Icon(Icons.close, color: Colors.white, size: 30),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
