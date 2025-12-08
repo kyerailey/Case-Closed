@@ -4,6 +4,8 @@ import '../models/evidence_model.dart';
 import '../main.dart'; // For AppColors
 import 'suspects.dart'; 
 import 'evidence.dart'; 
+// Import Background so we can review it
+import 'background.dart';
 
 class Hotspot {
   final String id;
@@ -32,47 +34,61 @@ class DeathRowScene extends StatelessWidget {
       length: 3, 
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("CASE FILE: #001: DEATH ON THE ROW"),
+          title: const Text("CASE FILE #001: DEATH ON THE ROW"),
           backgroundColor: const Color(0xFF0F202E), 
           
           // ****************************************************
-          // NEW BUTTON LOCATION (TOP RIGHT)
+          // 1. REVIEW CASE BUTTON (Top Left)
+          // ****************************************************
+          leading: IconButton(
+            icon: const Icon(Icons.description), // File Document Icon
+            tooltip: "Review Case File",
+            onPressed: () {
+              // Open the Background page again
+              Navigator.push(
+                context, 
+                MaterialPageRoute(builder: (context) => const DeathRowBackground())
+              );
+            },
+          ),
+          
+          // ****************************************************
+          // 2. ABORT & SAVE BUTTONS (Top Right)
           // ****************************************************
           actions: [
-            // 1. LEAVE BUTTON (Blue/Grey)
+            // ABORT BUTTON
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
               child: ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.surface, // Blue/Grey
+                  backgroundColor: AppColors.surface, 
                   foregroundColor: Colors.white,
                   elevation: 0,
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                 ),
-                icon: const Icon(Icons.exit_to_app, size: 18),
-                label: const Text("LEAVE"),
+                icon: const Icon(Icons.delete_forever, size: 18), 
+                label: const Text("ABORT"),
                 onPressed: () => _showLeaveDialog(context),
               ),
             ),
 
-            // 2. SAVE BUTTON (Red/Accent)
+            // SAVE & EXIT BUTTON
             Padding(
               padding: const EdgeInsets.only(left: 4, right: 12, top: 8, bottom: 8),
               child: ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.accent, // Red
+                  backgroundColor: AppColors.accent, 
                   foregroundColor: Colors.white,
                   elevation: 0,
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                 ),
                 icon: const Icon(Icons.save, size: 18),
-                label: const Text("SAVE"),
+                label: const Text("SAVE & EXIT"), 
                 onPressed: () => _showSaveDialog(context),
               ),
             ),
           ],
 
-          // TABS UNDER THE BUTTONS
           bottom: const TabBar(
             indicatorColor: AppColors.accent, 
             labelColor: Colors.white,
@@ -92,32 +108,33 @@ class DeathRowScene extends StatelessWidget {
             EvidenceTab(),
           ],
         ),
-        
-        // Removed FloatingActionButton because we moved them to the top!
       ),
     );
   }
 
   // ----------------------------------------------------------
-  // LOGIC: SAVE
+  // LOGIC: SAVE & EXIT
   // ----------------------------------------------------------
   void _showSaveDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (ctx) => _buildCustomDialog(
         context: ctx,
-        title: "Save Progress?",
-        content: "This will overwrite any previous save file.",
-        yesText: "Save",
+        title: "Save & Exit?",
+        content: "Your progress will be saved and you will return to the main menu.",
+        yesText: "Save & Exit",
         noText: "Cancel",
-        // SAVE BUTTON COLOR (Red)
         yesColor: AppColors.accent,
         onYes: () async {
           // 1. Write to Disk
           await Provider.of<EvidenceModel>(context, listen: false).saveProgress();
+          
+          // 2. Close Dialog & Exit
           Navigator.pop(ctx);
+          Navigator.of(context).popUntil((route) => route.isFirst); 
+          
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Game Saved Successfully."), backgroundColor: Colors.green)
+            const SnackBar(content: Text("Progress Saved."), backgroundColor: Colors.green)
           );
         },
       ),
@@ -125,33 +142,30 @@ class DeathRowScene extends StatelessWidget {
   }
 
   // ----------------------------------------------------------
-  // LOGIC: LEAVE
+  // LOGIC: ABORT (DELETE SAVE)
   // ----------------------------------------------------------
   void _showLeaveDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (ctx) => _buildCustomDialog(
         context: ctx,
-        title: "Leave Case?",
-        content: "Any unsaved evidence will be lost forever.",
-        yesText: "Leave",
+        title: "Abort Investigation?",
+        content: "This will DELETE your save file and restart the investigation. Are you sure?",
+        yesText: "Abort (Delete Save)",
         noText: "Stay",
-        // LEAVE BUTTON COLOR (Blue)
         yesColor: AppColors.surface, 
-        onYes: () {
-          // 1. Clear RAM (Session Data)
-          // This ensures that if they didn't save, the evidence is GONE.
-          Provider.of<EvidenceModel>(context, listen: false).clearCurrentSession();
+        onYes: () async {
+          // 1. DELETE FROM DISK & RAM
+          await Provider.of<EvidenceModel>(context, listen: false).deleteSaveFile();
 
-          // 2. Go Home
-          Navigator.pop(ctx); // Close Dialog
-          Navigator.pop(context); // Exit Page
+          // 2. Close Dialog & Exit
+          Navigator.pop(ctx); 
+          Navigator.of(context).popUntil((route) => route.isFirst); 
         },
       ),
     );
   }
 
-  // Helper for the popups
   Widget _buildCustomDialog({
     required BuildContext context,
     required String title,
@@ -184,7 +198,7 @@ class DeathRowScene extends StatelessWidget {
 }
 
 // -----------------------------------------------------------------------
-// INTERACTIVE SCENE (Unchanged logic, just keeping it here for completeness)
+// INTERACTIVE SCENE TAB
 // -----------------------------------------------------------------------
 class InteractiveSceneTab extends StatelessWidget {
   const InteractiveSceneTab({super.key});
@@ -214,11 +228,7 @@ class InteractiveSceneTab extends StatelessWidget {
                 onTap: () => _showDialog(context, h, evidenceModel),
                 child: Container(
                   width: 60, height: 60,
-                  //color: Colors.transparent, 
-                  decoration: BoxDecoration(
-                    color: Colors.red.withOpacity(0.3), // Faint red fill
-                    border: Border.all(color: Colors.red, width: 2), // Red border
-                  ),
+                  color: Colors.transparent, // Invisible
                 ),
               ),
             );

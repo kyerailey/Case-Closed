@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../main.dart'; // Import to access AppColors
+// Import the Background Page so we can link to it
+import '../death_row/background.dart'; 
 
 class InstructionsPage extends StatelessWidget {
   const InstructionsPage({super.key});
@@ -12,7 +14,25 @@ class InstructionsPage extends StatelessWidget {
         title: const Text("Field Guide"),
         backgroundColor: AppColors.background,
         elevation: 0,
+        
+        // ****************************************************
+        // NEW: CASE REVIEW BUTTON (Top Right)
+        // ****************************************************
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.description), // File Document Icon
+            tooltip: "Review Case File",
+            onPressed: () {
+              // Navigate to the Background Story Page
+              Navigator.push(
+                context, 
+                MaterialPageRoute(builder: (context) => const DeathRowBackground())
+              );
+            },
+          ),
+        ],
       ),
+      
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
