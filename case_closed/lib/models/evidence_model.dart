@@ -48,8 +48,9 @@ class EvidenceModel extends ChangeNotifier {
       if (savedIds != null) {
         _collected.clear();
         for (String id in savedIds) {
-          if (id == 'red_cup') _collected.add(Evidence(id: 'red_cup', title: 'Red Solo Cup', description: 'Smells of alcohol. Lab results indicate traces of \'Benzodiazepine\' mixed with the beer.'));
-          else if (id == 'necklace') _collected.add(Evidence(id: 'necklace', title: 'Silver Chain', description: 'Broken at the clasp. Engraved with \'TB\' on the back. Found in dust layer.'));
+          if (id == 'red_cup') {
+            _collected.add(Evidence(id: 'red_cup', title: 'Red Solo Cup', description: 'Smells of alcohol. Lab results indicate traces of \'Benzodiazepine\' mixed with the beer.'));
+          } else if (id == 'necklace') _collected.add(Evidence(id: 'necklace', title: 'Silver Chain', description: 'Broken at the clasp. Engraved with \'TB\' on the back. Found in dust layer.'));
           else if (id == 'burner_phone') _collected.add(Evidence(id: 'burner_phone', title: 'Prepaid Cellphone', description: 'Screen cracked. Last text at 12:10 AM: \'Get up here now.\''));
           else if (id == 'receipt') _collected.add(Evidence(id: 'receipt', title: 'Crumpled Receipt', description: 'Found in trash. Purchase of \'TracFone Prepaid\'. Paid via Credit Card ending in #8842.'));
           else if (id == 'hoodie') _collected.add(Evidence(id: 'hoodie', title: 'Ripped Hoodie', description: 'Found behind planter. Dark fabric with blood spatter (Type O+).'));

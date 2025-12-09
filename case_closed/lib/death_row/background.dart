@@ -55,16 +55,26 @@ class DeathRowBackground extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // PHOTO (Left)
-                  Container(
+                   Container(
                     width: 120,
                     height: 150,
+                    clipBehavior: Clip.antiAlias, // Clips the image to the border
                     decoration: BoxDecoration(
                       color: Colors.grey[800],
                       border: Border.all(color: Colors.white24, width: 2),
                       boxShadow: const [BoxShadow(color: Colors.black45, blurRadius: 8, offset: Offset(2, 2))],
-                      // If you have a specific victim image, switch the child to Image.asset
                     ),
-                    child: const Icon(Icons.person, size: 60, color: Colors.white12),
+                    // We use Image.asset as a child so we can use errorBuilder
+                    child: Image.asset(
+                      'assets/images/ethan.png',
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        // IF IMAGE FAILS, SHOW THIS ICON INSTEAD
+                        return const Center(
+                          child: Icon(Icons.person, size: 60, color: Colors.white12)
+                        );
+                      },
+                    ),
                   ),
                   
                   const SizedBox(width: 24),
