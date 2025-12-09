@@ -118,7 +118,7 @@ class IntroPage extends StatelessWidget {
                 child: Center(
                   // ADDED PADDING HERE TO NUDGE IT RIGHT
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 15.0), 
+                    padding: const EdgeInsets.only(left: 35.0), 
                     child: Image.asset(
                       'assets/images/icon.png',
                       height: 280, 

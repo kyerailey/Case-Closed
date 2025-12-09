@@ -50,7 +50,7 @@ final List<Hotspot> hotspots = [
     id: "receipt", 
     title: "Crumpled Receipt", 
     description: "Found in trash. Purchase of 'TracFone Prepaid'. Paid via Credit Card ending in #8842.", 
-    left: 0.52, 
+    left: 0.50, 
     top: 0.25
   ),
 
@@ -267,8 +267,8 @@ class InteractiveSceneTab extends StatelessWidget {
                 onTap: () => _showDialog(context, h, evidenceModel),
                 child: Container(
                   width: 60, height: 60,
-                  color: Colors.red.withOpacity(0.5), // *** DEBUG CHANGE: Set to RED ***
-                  //color: Colors.transparent, // Invisible
+                  //color: Colors.red.withOpacity(0.5), // *** DEBUG CHANGE: Set to RED ***
+                  color: Colors.transparent, // Invisible
                 ),
               ),
             );
