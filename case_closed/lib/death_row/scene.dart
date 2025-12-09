@@ -73,7 +73,7 @@ class DeathRowScene extends StatelessWidget {
       length: 3, 
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("CASE #001"),
+          title: const Text("#001"),
           backgroundColor: const Color(0xFF0F202E), 
           
           // ****************************************************
