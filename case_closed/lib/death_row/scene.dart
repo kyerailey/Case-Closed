@@ -23,8 +23,8 @@ final List<Hotspot> hotspots = [
     id: "red_cup", 
     title: "Red Solo Cup", 
     description: "Smells of alcohol. Lab results indicate traces of 'Benzodiazepine' mixed with the beer.", 
-    left: 0.72, 
-    top: 0.72
+    left: 0.76, 
+    top: 0.70
   ),
 
   // 2. Necklace (Bottom Left - The chain on the floor)
@@ -32,8 +32,8 @@ final List<Hotspot> hotspots = [
     id: "necklace", 
     title: "Silver Chain", 
     description: "Broken at the clasp. Engraved with 'TB' on the back. Found in dust layer.", 
-    left: 0.12, 
-    top: 0.82
+    left: 0.02, 
+    top: 0.80
   ),
 
   // 3. Burner Phone (Middle Left - The white phone)
@@ -41,8 +41,8 @@ final List<Hotspot> hotspots = [
     id: "burner_phone", 
     title: "Prepaid Cellphone", 
     description: "Screen cracked. Last text at 12:10 AM: 'Get up here now.' No contact name saved.", 
-    left: 0.15, 
-    top: 0.58
+    left: 0.04, 
+    top: 0.57
   ),
 
   // 4. Receipt (Hidden near the cup/trash)
@@ -50,8 +50,8 @@ final List<Hotspot> hotspots = [
     id: "receipt", 
     title: "Crumpled Receipt", 
     description: "Found in trash. Purchase of 'TracFone Prepaid'. Paid via Credit Card ending in #8842.", 
-    left: 0.85, 
-    top: 0.75
+    left: 0.52, 
+    top: 0.25
   ),
 
   // 5. Hoodie (Center - The green sweatshirt)
@@ -59,8 +59,8 @@ final List<Hotspot> hotspots = [
     id: "hoodie", 
     title: "Ripped Hoodie", 
     description: "Found behind planter. Dark fabric with blood spatter (Type O+).", 
-    left: 0.42, 
-    top: 0.42
+    left: 0.50, 
+    top: 0.47
   ),
 ];
 
@@ -73,7 +73,7 @@ class DeathRowScene extends StatelessWidget {
       length: 3, 
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("CASE FILE #001: DEATH ON THE ROW"),
+          title: const Text("CASE #001"),
           backgroundColor: const Color(0xFF0F202E), 
           
           // ****************************************************
