@@ -116,11 +116,15 @@ class IntroPage extends StatelessWidget {
               Flexible(
                 flex: 6,
                 child: Center(
-                  child: Image.asset(
-                    'assets/images/icon.png',
-                    height: 280, 
-                    fit: BoxFit.contain,
-                    errorBuilder: (c,e,s) => const Icon(Icons.search, size: 150, color: AppColors.accent),
+                  // ADDED PADDING HERE TO NUDGE IT RIGHT
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 15.0), 
+                    child: Image.asset(
+                      'assets/images/icon.png',
+                      height: 280, 
+                      fit: BoxFit.contain,
+                      errorBuilder: (c,e,s) => const Icon(Icons.search, size: 150, color: AppColors.accent),
+                    ),
                   ),
                 ),
               ),

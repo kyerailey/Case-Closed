@@ -137,7 +137,7 @@ class _SuspectCarouselDialogState extends State<SuspectCarouselDialog> {
             
             // INSPECT BUTTON
             SizedBox(
-              width: double.infinity, height: 45,
+              width: double.infinity,
               child: ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(backgroundColor: AppColors.buttonColor, foregroundColor: Colors.white),
                 icon: const Icon(Icons.search),
@@ -152,7 +152,7 @@ class _SuspectCarouselDialogState extends State<SuspectCarouselDialog> {
 
             // WARRANT BUTTON
             SizedBox(
-              width: double.infinity, height: 45,
+              width: double.infinity,
               child: ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF2C3E50), foregroundColor: Colors.white),
                 icon: const Icon(Icons.assignment_turned_in),
