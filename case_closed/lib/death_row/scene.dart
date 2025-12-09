@@ -18,11 +18,50 @@ class Hotspot {
 
 // THE CLUES
 final List<Hotspot> hotspots = [
-  Hotspot(id: "red_cup", title: "Red Solo Cup", description: "Smells of alcohol. Lab results indicate traces of 'Benzodiazepine' mixed with the beer.", left: 0.70, top: 0.80),
-  Hotspot(id: "necklace", title: "Silver Chain", description: "Broken at the clasp. Engraved with 'TB' on the back. Found in dust layer.", left: 0.30, top: 0.65),
-  Hotspot(id: "burner_phone", title: "Prepaid Cellphone", description: "Screen cracked. Last text at 12:10 AM: 'Get up here now.' No contact name saved.", left: 0.85, top: 0.50),
-  Hotspot(id: "receipt", title: "Crumpled Receipt", description: "Found in trash. Purchase of 'TracFone Prepaid'. Paid via Credit Card ending in #8842.", left: 0.20, top: 0.85),
-  Hotspot(id: "hoodie", title: "Ripped Hoodie", description: "Found behind planter. Dark fabric with blood spatter (Type O+).", left: 0.10, top: 0.40),
+  // 1. Red Cup (Bottom Right)
+  Hotspot(
+    id: "red_cup", 
+    title: "Red Solo Cup", 
+    description: "Smells of alcohol. Lab results indicate traces of 'Benzodiazepine' mixed with the beer.", 
+    left: 0.72, 
+    top: 0.72
+  ),
+
+  // 2. Necklace (Bottom Left - The chain on the floor)
+  Hotspot(
+    id: "necklace", 
+    title: "Silver Chain", 
+    description: "Broken at the clasp. Engraved with 'TB' on the back. Found in dust layer.", 
+    left: 0.12, 
+    top: 0.82
+  ),
+
+  // 3. Burner Phone (Middle Left - The white phone)
+  Hotspot(
+    id: "burner_phone", 
+    title: "Prepaid Cellphone", 
+    description: "Screen cracked. Last text at 12:10 AM: 'Get up here now.' No contact name saved.", 
+    left: 0.15, 
+    top: 0.58
+  ),
+
+  // 4. Receipt (Hidden near the cup/trash)
+  Hotspot(
+    id: "receipt", 
+    title: "Crumpled Receipt", 
+    description: "Found in trash. Purchase of 'TracFone Prepaid'. Paid via Credit Card ending in #8842.", 
+    left: 0.85, 
+    top: 0.75
+  ),
+
+  // 5. Hoodie (Center - The green sweatshirt)
+  Hotspot(
+    id: "hoodie", 
+    title: "Ripped Hoodie", 
+    description: "Found behind planter. Dark fabric with blood spatter (Type O+).", 
+    left: 0.42, 
+    top: 0.42
+  ),
 ];
 
 class DeathRowScene extends StatelessWidget {
@@ -228,7 +267,8 @@ class InteractiveSceneTab extends StatelessWidget {
                 onTap: () => _showDialog(context, h, evidenceModel),
                 child: Container(
                   width: 60, height: 60,
-                  color: Colors.transparent, // Invisible
+                  color: Colors.red.withOpacity(0.5), // *** DEBUG CHANGE: Set to RED ***
+                  //color: Colors.transparent, // Invisible
                 ),
               ),
             );

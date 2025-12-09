@@ -21,7 +21,7 @@ class _SuspectsTabState extends State<SuspectsTab> {
       "alibi": "Traffic cam shows her car leaving campus at 11:59 PM.",
       "motive": "Anger over breakup.",
       "notes": "Forensics: Fingerprints on balcony railing match hers, but dust analysis suggests they are 4+ hours old.",
-      "image": "assets/images/suspect_jenna.png",
+      "image": "assets/images/jenna.png",
     },
     // 2. TYLER
     {
@@ -30,7 +30,7 @@ class _SuspectsTabState extends State<SuspectsTab> {
       "alibi": "Claims he was in the kitchen cutting limes.",
       "motive": "Ethan threatened to report hazing violations.",
       "notes": "Personal Effects: Wallet contains Visa ending in #8842.",
-      "image": "assets/images/suspect_tyler.png", 
+      "image": "assets/images/tyler.png", 
     },
     // 3. PROF KLINE
     {
@@ -39,7 +39,7 @@ class _SuspectsTabState extends State<SuspectsTab> {
       "alibi": "Faculty Dinner downtown.",
       "motive": "Ethan discovered academic fraud.",
       "notes": "Personal Effects: Receipt from 'The Golden Steakhouse' timestamped 12:05 AM. Distance: 15 miles.",
-      "image": "assets/images/suspect_kline.png",
+      "image": "assets/images/prof.png",
     },
     // 4. MASON (Last)
     {
@@ -48,7 +48,7 @@ class _SuspectsTabState extends State<SuspectsTab> {
       "alibi": "Seen on CCTV in backyard (11:55 PM - 12:20 AM).",
       "motive": "Protecting fraternity reputation.",
       "notes": "Room Search: Door found open. Desk messy.",
-      "image": "assets/images/suspect_mason.png",
+      "image": "assets/images/mason.png",
     },
   ];
 
